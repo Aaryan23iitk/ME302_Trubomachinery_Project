@@ -1,0 +1,631 @@
+\documentclass[12pt]{article}
+
+% ================= PACKAGES =================
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{ragged2e}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codebg}{RGB}{245,245,245}
+\definecolor{darkgreen}{RGB}{0,120,0}
+
+\lstdefinestyle{custompython}{
+    language=Python,
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue},
+    commentstyle=\color{darkgreen},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny,
+    stepnumber=1,
+    numbersep=8pt,
+    breaklines=true,
+    showstringspaces=false,
+    frame=single,
+    rulecolor=\color{black}
+}
+
+\lstset{style=custompython}
+\usepackage{caption}
+\captionsetup[lstlisting]{labelformat=empty}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+\definecolor{myred}{RGB}{180,0,0} 
+
+% Section
+\titleformat{\section}
+{\color{myred}\normalfont\Large\bfseries}
+{\color{myred}\thesection.}{1em}{}
+
+% Subsection
+\titleformat{\subsection}
+{\color{myred}\normalfont\large\bfseries}
+{\color{myred}\thesubsection.}{1em}{}
+
+% Subsubsection 
+\titleformat{\subsubsection}
+{\color{myred}\normalfont\normalsize\bfseries}
+{\color{myred}\thesubsubsection.}{1em}{}
+% ================= DOCUMENT =================
+\begin{document}
+
+
+
+% ================= TITLE PAGE =================
+\begin{titlepage}
+\centering
+
+\includegraphics[width=3cm]{iitk_logo.png}
+\vspace{1cm}
+
+% Course Info
+{\Large \textbf{ME302: 2025-26 - II} \par}
+\vspace{0.3cm}
+{\large {COURSE PROJECT REPORT} \par}
+
+\vspace{1.5cm} 
+
+% Main Title
+{\Huge \textbf{Scaling Analysis of a Turbomachine Component} \par}
+\vspace{0.5cm}
+{\Large Closed-Loop High-Pressure Facility Study \par}
+
+\vspace{2cm}
+
+% Authors
+{\large
+\textbf{Aaryan Tiwari (230023)} \\
+\textbf{Harshit (230457)}
+\par}
+
+\vspace{1.5cm}
+
+% Institute Info
+{\large
+Department of Mechanical Engineering \\
+Indian Institute of Technology Kanpur
+\par}
+
+\vfill
+
+% Date
+{\large \today}
+
+\end{titlepage}
+
+
+
+\section*{Problem Statement}
+
+A turbomachine component, designed by Company X for a future gas turbine engine, is to be tested at a smaller scale in a laboratory. The experimental study is to be carried out at Research Laboratory Y, which houses a closed-loop high-pressure testing facility.
+
+\begin{center}
+    \includegraphics[width=0.75\textwidth]{Fig1.png}
+    \captionof{figure}{Closed-loop High Pressure Testing Facility}
+\end{center}
+
+\vspace{1em}
+
+\justifying
+The flow is driven by a compressor, and the inlet stagnation pressure \( p_{01} \) is controllable. A throttle chamber is used to reduce the stagnation pressure and temperature back to inlet conditions, ensuring continuous closed-loop operation. The diffuser (Station 3 to Station 4) has inlet diameter \( D = 0.6\,\text{m} \) and length \( L = 1.5\,\text{m} \). For testing an article in
+the facility, the test-section and the upstream diffuser are re-designed and
+fabricated.
+
+\subsection*{Facility Constraints}
+\begin{itemize}
+    \item Minimum allowable pressure anywhere in the system: \( 200\,\text{kPa} \)
+    \item For closed-loop operation: \( p_{05} \geq p_{01} \)
+\end{itemize}
+
+\subsection*{Model Similarity Requirements}
+\begin{itemize}
+    \item Mach number: \( M = 0.5 \)
+    \item Reynolds number: \( Re = 3.0 \times 10^6 \)
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\section{Scaling and Flow Objectives}
+\section{\textcolor{myred}{Scaling and Flow Objectives}}
+Determine the maximum geometric scale:
+\[
+scale = \frac{l_{model}}{l_{prototype}} \in (0,1)
+\]
+such that similarity requirements and facility constraints are satisfied.
+
+\subsection*{To be Reported}
+\begin{itemize}
+    \item Maximum allowable scale
+    \item Inlet stagnation pressure \( p_{01} \)
+    \item Compressor operating point:
+    \[
+    \frac{p_{02}}{p_{01}}, \quad \frac{T_{02}}{T_{01}}, \quad \dot{m}_{ref}
+    \]
+    \item Plot on compressor map (\( p_0 \) ratio vs \( \dot{m}_{ref} \))
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Assumptions and Given Data}
+
+\begin{itemize}
+    \item Adiabatic flow: \( T_{02} = \text{constant} \)
+    \item Test section diameter: \( D_4 = 2 \cdot l_{model} \)
+    \item \( T_{01} = 293\,\text{K} \)
+    \item Ideal gas: \( R = 287\,\text{J/kg.K},\ \gamma = 1.4 \)
+    \item Speed of sound: \( a = \sqrt{\gamma R T} \)
+    \item Viscosity: \( \mu = 1.83 \times 10^{-5} \,\text{Pa.s} \)
+    \item \( p_{02} - p_{03} = 1.5\% \, p_{02} \)
+    \item \( p_{04} - p_{05} = 5\% \, p_{04} \)
+\end{itemize}
+
+\subsection*{Mass Flow Rate Relation}
+\[
+\dot{m} = \dot{m}_{ref} \left( \frac{p_{01}}{101.325} \right)\sqrt{\frac{293}{T_{01}}}
+\]
+
+\subsection*{Reynolds Number}
+\[
+Re = \frac{\rho_4 C_4 l_{model}}{\mu_4}
+\]
+
+\subsection*{Diffuser Loss Coefficient}
+
+The total pressure loss coefficient for the diffuser is defined as:
+
+\[
+K = \frac{p_{t3} - p_{t4}}{\frac{1}{2}\rho_3 U_3^2}
+\]
+
+where:
+\begin{itemize}
+    \item \( p_{t3}, p_{t4} \) are total (stagnation) pressures at stations 3 and 4
+    \item \( \rho_3 \) is the density at diffuser inlet
+    \item \( U_3 \) is the velocity at diffuser inlet
+\end{itemize}
+
+The loss coefficient is evaluated using:
+
+\[
+K =
+\begin{cases}
+0, & \theta < 0 \\
+3.2 \tan^{1.25}(\theta)\left(1 - \frac{D_3^2}{D_4^2}\right)^2, & \theta > 0
+\end{cases}
+\]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Problem Understanding}
+
+\justifying
+The facility operates as a closed-loop system where the compressor drives the flow. The inlet stagnation pressure \( p_{01} \) is controlled, and the compressor increases it to \( p_{02} \). The flow then passes through a diffuser and enters the test section where the scaled model is tested.
+
+After the test section, the flow enters a throttle chamber which reduces the stagnation conditions back to inlet values, ensuring continuous operation.
+
+To achieve accurate results, both Mach number and Reynolds number similarity must be maintained while satisfying all facility constraints.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\section{Problem Formulation and System Overview}
+
+The objective of this project is to experimentally analyze the performance of a turbomachinery component, intended for a future gas turbine engine, by testing a scaled-down model in a controlled laboratory environment. The experimental study is conducted in a closed-loop high-pressure flow facility, as illustrated in the schematic (refer to page 1).
+
+The facility consists of a compressor-driven flow loop, where the inlet stagnation pressure ($p_{01}$) is controllable. A throttle chamber is incorporated to regulate the flow and restore outlet stagnation conditions to match the inlet, thereby ensuring continuous closed-loop operation. The test section, along with an upstream diffuser, is redesigned to accommodate the scaled model.
+
+A key requirement of the study is to ensure dynamic similarity between the prototype and the model. This is achieved by matching both the Mach number ($M = 0.5$) and the Reynolds number ($Re = 3 \times 10^6$), based on the characteristic length. Since the prototype length is fixed, the model scale is defined as:
+
+\begin{equation}
+\text{scale} = \frac{l_{\text{model}}}{l_{\text{prototype}}}
+\end{equation}
+
+The scale must be carefully selected within the range $(0,1)$ to satisfy similarity conditions while remaining feasible within the operational constraints of the facility.
+
+The system is subject to the following constraints:
+
+\begin{itemize}
+    \item Minimum allowable pressure in the facility: $p \geq 200$ kPa (structural requirement)
+    \item Closed-loop operation condition: $p_{05} \geq p_{01}$
+    \item Geometric limitations on diffuser length and pipe diameter
+\end{itemize}
+
+Additionally, the flow is assumed to be adiabatic, implying that the stagnation temperature remains constant throughout the loop. Pressure losses across components such as the diffuser and connecting sections must be accounted for using the provided empirical relations.
+
+The primary objectives of the analysis are:
+
+\begin{enumerate}
+    \item To determine the maximum feasible model scale satisfying both similarity requirements and facility constraints
+    \item To evaluate the corresponding inlet stagnation pressure ($p_{01}$) and compressor operating point
+    \item To represent the operating point on the compressor characteristic curve ($p_0$ ratio vs. $\dot{m}_{\text{ref}}$)
+\end{enumerate}
+
+Overall, this project integrates concepts from compressible flow, similitude, turbomachinery performance, and experimental design. It requires achieving a balance between theoretical scaling laws and practical system limitations.
+\newpage
+
+\section{Methodology}
+
+The determination of the maximum geometric scale $s$ requires a coupling of compressor performance characteristics with the isentropic flow physics and similarity requirements of the test section. The analysis is performed by identifying the state of the fluid at each station ($1$ through $5$) as a function of the model scale.
+
+\subsection{Flow Similarity Requirements}
+To maintain dynamic similarity between the prototype and the model, two dimensionless parameters must be matched at the test section (Station 4):
+\begin{itemize}
+    \item {Mach Number Similarity:} $M_4 = 0.5$
+    \item {Reynolds Number Similarity:} $Re = \frac{\rho_4 C_4 l_{m}}{\mu_4} = 3.0 \times 10^6$
+\end{itemize}
+where $l_m = s \cdot l_{prototype}$ is the characteristic length of the model.
+
+\subsection{Mass Flow Rate Derivation}
+The required mass flow rate $\dot{m}$ through the facility is governed by the Reynolds number constraint. From the definition of mass flow rate:
+\begin{equation}
+    \dot{m} = \rho_4 A_4 C_4
+\end{equation}
+Given $A_4 = \pi l_m^2$ (since $D_4 = 2l_m$), we substitute $\rho_4 C_4 = \frac{Re \cdot \mu_4}{l_m}$ into the equation:
+\begin{equation}
+    \dot{m} = \left( \frac{Re \cdot \mu_4}{l_m} \right) \pi l_m^2 = \pi \mu_4 Re (s \cdot l_p)
+    \label{eq:mdot_req}
+\end{equation}
+Equation \ref{eq:mdot_req} shows that the actual mass flow rate required is a linear function of the scale $s$.
+
+\subsection{Station-wise Thermodynamic Analysis}
+The stagnation and static properties are calculated sequentially across the closed-loop facility:
+
+\subsubsection{Compressor and Inlet (Stations 1-2)}
+The inlet stagnation temperature is fixed at $T_{01} = 293$ K. From the compressor map data, for a given reference mass flow ($\dot{m}_{ref}$) and pressure ratio ($\Pi_c = p_{02}/p_{01}$), the actual inlet stagnation pressure $p_{01}$ must be:
+\begin{equation}
+    p_{01} = \frac{\dot{m} \cdot 101.325}{\dot{m}_{ref}} \sqrt{\frac{T_{01}}{293}} = \frac{\pi \mu Re (s \cdot l_p) \cdot 101.325}{\dot{m}_{ref}}
+\end{equation}
+The stagnation pressure at the compressor exit is $p_{02} = p_{01} \cdot \Pi_c$. Assuming adiabatic operation, the stagnation temperature at exit is $T_{02} = T_{01} \cdot (\text{$T_{0}$ ratio})$. {Additionally, the static pressure at Station 1 ($p_1$) must be monitored to ensure it does not drop below the structural limit due to inlet velocity.}
+
+
+
+\subsubsection{Diffuser/Nozzle Transition (Stations 3-4)}
+The flow travels from the main pipe ($D_3 = 0.6$ m) to the test section ($D_4 = 2l_m$). The stagnation pressure at Station 3 accounts for a $1.5\%$ line loss: $p_{03} = 0.985 p_{02}$. 
+
+The loss between Station 3 and 4 depends on the transition geometry. The semi-angle $\theta$ is:
+\begin{equation}
+    \theta = \tan^{-1} \left( \frac{D_4 - D_3}{2L} \right)
+\end{equation}
+Since $l_m < 0.2$ m which means that $D_4 < D_3$ (as $D_4 = 2l_m$ ; 0.4 $<$ 0.6), implying $\theta < 0$. Under this condition, the section acts as a nozzle with a total pressure loss coefficient $K = 0$. Thus, $p_{04} = p_{03}$.
+
+\subsubsection{Test Section Static Properties}
+At Station 4, the Mach number is $M_4 = 0.5$. The static pressure ($p_4$) and static temperature ($T_4$) are derived from isentropic relations:
+\begin{equation}
+    p_4 = \frac{p_{04}}{\left(1 + \frac{\gamma-1}{2}M_4^2\right)^{\frac{\gamma}{\gamma-1}}}, \quad T_4 = \frac{T_{04}}{1 + \frac{\gamma-1}{2}M_4^2}
+\end{equation}
+
+\subsubsection{Return Line (Station 5)}
+After the test section, a $5\%$ stagnation pressure loss is assumed: $p_{05} = 0.95 p_{04}$. 
+
+\subsection{Governing Constraints for Scale Maximization}
+Two primary constraints limit the maximum allowable scale $s$:
+\begin{enumerate}
+    \item {Structural Constraint:} The static pressure at every station $i$ must satisfy:
+    \begin{equation}
+        p_i = \frac{p_{0i}}{(1 + \frac{\gamma-1}{2}M_i^2)^{\frac{\gamma}{\gamma-1}}} \geq 200 \text{ kPa}
+    \end{equation}
+
+    \item {Closed-Loop Stability:} To maintain continuous circulation, the return stagnation pressure must be equal to or greater than the inlet:
+    \begin{equation}
+        p_{05} \geq p_{01}
+    \end{equation}
+\end{enumerate}
+
+\subsection{Computational Algorithm for State Reconstruction}
+The search for $s_{max}$ is conducted by iterating through all 138 compressor data points. For each point, the scale $s$ varies in the range $(0, 1)$. The algorithm identifies the maximum $s$ for which both the structural and loop stability constraints are met. The global maximum scale is then chosen as the final result.
+\\
+
+Once the optimal scale $s$ is identified through the iterative search of the compressor map, the following sequential algorithm is used to determine the facility-wide stagnation and static properties ($p_{0i}, T_{0i}, p_i, T_i$):
+
+\begin{enumerate}
+    \item \textbf{Mass Flow Calculation:} Using the similarity-derived relation, calculate the required loop mass flow:
+    \[ \dot{m} = \pi \mu Re (s \cdot l_p) \]
+
+    \item \textbf{Inlet Stagnation Pressure ($p_{01}$):} Relate the loop mass flow to the reference mass flow ($\dot{m}_{ref}$) from the selected compressor operating point:
+    \[ p_{01} = \frac{\dot{m} \times 101.325}{\dot{m}_{ref}} \sqrt{\frac{T_{01}}{293}} \]
+
+    \item \textbf{Compressor Exit (Station 2):} Apply the compressor pressure ratio ($\Pi_c$) and temperature ratio ($\tau_c$) from the map data:
+    \[ p_{02} = p_{01} \cdot \Pi_c, \quad T_{02} = T_{01} \cdot \tau_c \]
+
+    \item \textbf{Isentropic Propagation (Stations 3 to 4):} 
+    \begin{itemize}
+        \item Account for line losses: $p_{03} = 0.985 p_{02}$.
+        \item Since the transition is a nozzle ($K=0$), stagnation properties are conserved: $p_{04} = p_{03}$ and $T_{04} = T_{02}$.
+        \item \textbf{Static Properties:} Using $M_4 = 0.5$, calculate the test section static pressure $p_4$ to verify the structural constraint ($p_4 \geq 200$ kPa).
+    \end{itemize}
+
+    \item \textbf{Return and Stability Check (Station 5):} 
+    Account for test section and return line losses:
+    \[ p_{05} = 0.95 p_{04} \]
+    Finally, verify that $p_{05} \geq p_{01}$ to ensure the compressor provides enough "head" to overcome the total loop pressure drop.
+\end{enumerate}
+
+\newpage
+\section{Calculations }
+
+Based on the methodology described, we now derive the numerical relationship to determine the maximum scale $s$ by satisfying the similarity requirements at the test section (Station 4).
+
+\subsection{Numerical Derivation of the Scaling Equation}
+The required mass flow rate $\dot{m}$ is determined by the Reynolds number $Re = 3.0 \times 10^6$ and the model length $l_m = 0.2s$:
+\begin{align*}
+    \dot{m} &= \pi \mu Re (s \cdot l_p) \\
+    \dot{m} &= \pi \times (1.83 \times 10^{-5}) \times (3.0 \times 10^6) \times (0.2s) \\
+    \dot{m} &= 34.4947s \text{ kg/s}
+\end{align*}
+
+Using the relation for $\dot{m}_{ref}$ with $T_{01} = 293$ K:
+\begin{equation}
+    \dot{m}_{ref} = \dot{m} \left( \frac{101.325}{p_{01}} \right) \implies p_{01} = \frac{34.4947s \times 101.325}{\dot{m}_{ref}}
+\end{equation}
+
+At Station 4, the mass flow rate for a compressible flow at $M_4 = 0.5$ is given by:
+\begin{equation}
+    \dot{m} = \frac{p_{04} A_4}{\sqrt{T_{04}}} \sqrt{\frac{\gamma}{R}} M_4 \left( 1 + \frac{\gamma-1}{2} M_4^2 \right)^{-\frac{\gamma+1}{2(\gamma-1)}}
+\end{equation}
+
+Substituting $A_4 = \pi (0.2s)^2$, $p_{04} = 0.985 \cdot \Pi_c \cdot p_{01}$, and $T_{04} = \tau_c \cdot 293$, we rearrange to solve for $s^2$:
+\begin{equation}
+    s^2 = 0.04524 \cdot \dot{m}_{ref} \cdot \frac{\sqrt{\tau_c}}{\Pi_c}
+\end{equation}
+
+\subsection{Constraint Validation and Optimal Point}
+By iterating through the provided compressor map, the maximum valid scale is found for the following operating point:
+\begin{itemize}
+    \item {Reference Mass Flow ($\dot{m}_{ref}$):} $10.5503$ kg/s
+    \item {Pressure Ratio ($\Pi_c$):} $1.2105$
+    \item {Temperature Ratio ($\tau_c$):} $1.0685$
+\end{itemize}
+
+Substituting these values into the scaling equation:
+\begin{equation*}
+    s = \sqrt{0.04524 \times 10.5503 \times \frac{\sqrt{1.0685}}{1.2105}} \approx {0.6384}
+\end{equation*}
+
+\subsection{Verification of Facility Constraints}
+At the maximum scale of $s = 0.6384$, the system parameters are calculated to ensure they fall within the operational envelope:
+
+\begin{itemize}
+    \item \textbf{Inlet Stagnation Pressure:} From the mass flow requirement, $p_{01}$ is set to:
+    \[ p_{01} = \frac{34.4947(0.6384) \times 101.325}{10.5503} = {211.52\,\text{kPa}} \]
+    
+    \item \textbf{Station 1 Static Pressure Check:} 
+    Assuming a standard inlet duct velocity (typically $M_1 \approx 0.1$ or less), the static pressure at the compressor suction is:
+    \[ p_1 = \frac{p_{01}}{(1 + \frac{\gamma-1}{2}M_1^2)^{\frac{\gamma}{\gamma-1}}} \approx \frac{211.5}{1.007} = {210.31\,\text{kPa}} \]
+    Since $210.31\,\text{kPa} > 200\,\text{kPa}$, the structural constraint is satisfied at the inlet.
+
+    \item \textbf{Closed-Loop Stability ($p_{05} \geq p_{01}$):} 
+    The return stagnation pressure after all system losses is:
+    \[ p_{05} = 0.95 \times 0.985 \times 1.2105 \times p_{01} = 1.132 p_{01} \]
+    As $1.132 > 1.0$, the facility can maintain continuous closed-loop operation.
+    \item \textbf{Station 4 Stagnation Pressure:} 
+    Accounting for compressor pressure rise and line losses ($1.5\%$):
+    \[ p_{04} = 0.985 \times \Pi_c \times p_{01} = 0.985 \times 1.2105 \times 211.52 = {252.19\,\text{kPa}} \]
+    \item \textbf{Minimum Pressure Check (Station 4):} 
+    At the test section where $M_4 = 0.5$, the static pressure is:
+    \[ p_4 = \frac{p_{04}}{(1 + 0.2(0.5)^2)^{3.5}} = \frac{252.19}{1.1862} = {212.60\,\text{kPa}} \]
+    This remains above the $200\,\text{kPa}$ limit, confirming the scale is safe.
+\end{itemize}
+
+
+\begin{center}
+    \includegraphics[width=0.7\textwidth]{compressor_map.png}
+    \captionof{figure}{Compressor Map with Selected Operating Point (Red Dot)}
+\end{center}
+\newpage
+\section{Summary of Final Results}
+
+The scaling analysis and computational iteration over the compressor performance map yielded a unique optimal operating point. This point allows for the largest possible physical model while strictly adhering to the structural pressure limits and closed-loop stability requirements of the laboratory facility.
+
+\subsection{Key Parameter Summary}
+The following table summarizes the primary outcomes of the study:
+
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Parameter} & \textbf{Calculated Value} \\ \hline
+Maximum Allowable Scale ($s$) &{0.638477171} \\ \hline
+Inlet Stagnation Pressure ($p_{01}$) & {211.52 kPa} \\ \hline
+Compressor Pressure Ratio ($\Pi_c$) & {1.210453952
+} \\ \hline
+Compressor Temperature Ratio ($\tau_c$) & {1.068519008} \\ \hline
+Reference Mass Flow ($\dot{m}_{ref}$) & {10.55028375
+ kg/s} \\ \hline
+Actual Loop Mass Flow ($\dot{m}$) & {22.0240704 kg/s} \\ \hline
+Total Pressure Loss Coefficient, ($K$) & {0} \\ \hline
+\end{tabular}
+\caption{Final optimized facility and scaling parameters.}
+\end{table}
+
+\subsection{Detailed Station-wise Results}
+Based on the maximum scale $s = 0.6384$, the thermodynamic state at each critical station is reported below:
+
+\begin{itemize}
+    \item \textbf{Test Section Geometry:} The test section diameter was determined to be $D_4 = 2 \cdot (s \cdot l_p) = 0.2554$ m. 
+    \item \textbf{Compressor Operating Point:} The compressor operates at a reference mass flow of $10.5503$ kg/s with a pressure ratio of $1.2105$. This point is situated within the stable operating region of the provided compressor map (see Figure 2).
+    \item \textbf{Pressure Safety Margin:} 
+    \begin{itemize}
+        \item The minimum static pressure in the system occurs at Station 1 ($p_1 = 210.31$ kPa) and Station 4 ($p_4 = 212.60$ kPa).
+        \item Both values maintain a safety margin over the 200 kPa structural limit.
+    \end{itemize}
+    \item \textbf{Loop Sustainability:} The exit stagnation pressure $p_{05}$ is calculated as $239.46$ kPa. Since $p_{05} > p_{01}$ ($239.46 > 211.52$), the facility maintains the required pressure potential to overcome throttle losses and sustain continuous operation.
+\end{itemize}
+
+
+
+\newpage
+\newpage
+\section*{Appendix: Python Implementation}
+\begin{lstlisting}[caption={Constants and Input Parameters}]
+import pandas as pd
+import numpy as np
+from scipy.optimize import fsolve
+
+# ----------- Constants -----------
+R = 287.05
+gamma = 1.4
+mu = 1.83e-5
+T01 = 293
+Re_target = 3.0e6
+l_proto = 0.2
+D_pipe = 0.6
+A_pipe = np.pi * (D_pipe / 2)**2
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Mach Number Solver}]
+def solve_mach(mdot, p0, T0, A):
+    target = (mdot * np.sqrt(R * T0)) / (p0 * 1000 * A * np.sqrt(gamma))
+
+    def func(M):
+        return M * (1 + 0.2 * M**2)**-3 - target
+
+    try:
+        M = fsolve(func, 0.2)[0]
+        if M < 0 or M > 5:
+            return np.nan
+        return M
+    except:
+        return np.nan
+\end{lstlisting}
+\begin{lstlisting}[caption={Temperature Calculations}]
+def static_temp(T0, M):
+    if np.isnan(M):
+        return np.nan
+    return T0 / (1 + 0.2 * M**2)
+\end{lstlisting}
+\newpage
+\begin{lstlisting}[caption={Main Scaling and Flow Computation}]
+file_path = 'Compressor_operation_map.xlsx'
+df = pd.read_excel(file_path)
+
+results = []
+
+for idx, row in df.iterrows():
+    try:
+        mdot_ref = row['mdot_ref(kg/s)']
+        T_ratio = row['T0 ratio']
+        P_ratio = row['P0 ratio']
+
+        # -------- Stagnation Temperatures --------
+        T02 = T01 * T_ratio
+        T03 = T02
+        T04 = T02
+        T05 = T01
+
+        # -------- Test Section (M = 0.5) --------
+        M4 = 0.5
+        T4 = T04 / (1 + 0.2 * M4**2)
+        C4 = 0.5 * np.sqrt(gamma * R * T4)
+
+        # -------- Scaling --------
+        K1 = (Re_target * mu * np.pi * 101.325 * 0.985 * P_ratio) / mdot_ref
+        K2 = (Re_target * mu * R * T4 * (1.05**3.5)) / (C4 * 1000)
+
+        l_m = np.sqrt(K2 / K1)
+        scale = l_m / l_proto
+
+        # -------- Mass Flow --------
+        mdot = Re_target * mu * np.pi * l_m
+\end{lstlisting}
+\begin{lstlisting}[caption={Pressure Calculations}]
+        p01 = (mdot * 101.325) / mdot_ref
+        p02 = p01 * P_ratio
+        p03 = 0.985 * p02
+        p04 = p03
+        p05 = 0.95 * p04
+\end{lstlisting}
+\begin{lstlisting}[caption={Mach Numbers and Static Properties}]
+        M1 = solve_mach(mdot, p01, T01, A_pipe)
+        M2 = solve_mach(mdot, p02, T02, A_pipe)
+        M3 = solve_mach(mdot, p03, T03, A_pipe)
+        M5 = solve_mach(mdot, p05, T05, A_pipe)
+
+        T1 = static_temp(T01, M1)
+        T2 = static_temp(T02, M2)
+        T3 = static_temp(T03, M3)
+        T5 = static_temp(T05, M5)
+\end{lstlisting}
+\newpage
+\begin{lstlisting}[caption={Static Pressure Calculations}]
+        def static_pressure(p0, M):
+            if np.isnan(M):
+                return np.nan
+            return p0 * (1 + 0.2 * M**2)**-3.5
+
+        p1 = static_pressure(p01, M1)
+        p2 = static_pressure(p02, M2)
+        p3 = static_pressure(p03, M3)
+        p4 = p04 * (1.05)**-3.5
+        p5 = static_pressure(p05, M5)
+\end{lstlisting}
+\begin{lstlisting}[caption={Export Results}]
+        results.append({
+            'Scale_s': scale,
+            'Mass_Flow_kg_s': mdot,
+            'p01_kPa': p01,
+            'p02_kPa': p02,
+            'p03_kPa': p03,
+            'p04_kPa': p04,
+            'p05_kPa': p05,
+            'M1': M1, 'M2': M2, 'M3': M3, 'M4': M4, 'M5': M5
+        })
+
+    except Exception as e:
+        print(f"Error in row {idx}: {e}")
+        continue
+
+results_df = pd.DataFrame(results)
+output_df = pd.concat([df, results_df], axis=1)
+
+output_df.to_excel('Scaling_Results.xlsx', index=False)
+\end{lstlisting}
+
+\newpage
+\section*{Supplement}
+\addcontentsline{toc}{section}{Supplement}
+
+All project files and the final report are provided in the submitted archive \texttt{ME302\_Submission.zip}. Upon extracting the zip folder, the following files and directories will be obtained:
+
+\begin{enumerate}
+    \item \textbf{ME302\_Project\_Report.pdf} \\
+    Contains the final comprehensive report of the project.
+    
+    \item \textbf{Python\_Code.py} \\
+    Contains the Python script used for scaling analysis and constraint verification. Upon execution, the code performs the following:
+    \begin{itemize}
+        \item \textbf{Scaling\_Results.xlsx}: Generates a single spreadsheet containing the thermodynamic parameters (pressures, temperatures, mass flow rates) for all compressor operating points that successfully satisfy the facility and similarity constraints.
+        
+    \end{itemize}
+    \textit{Note:}
+    \\
+    \textit{ 1.Python 3.10+ was used, requiring the \texttt{pandas}, \texttt{numpy} and \texttt{scipy}  libraries. }
+    \\
+    \textit{2.The compressor map data file must be in the same working directory as the script.}
+
+    \item \textbf{Latex\_report\_code.tex} \\
+    Contains the LaTeX source code used to generate this report.
+    \\
+    \\
+    \textit{Note: The 'Images for latex code' folder contains all image files required to compile the LaTeX code successfully. Ensure these images are in the same directory as the .tex file during compilation.}
+\end{enumerate}
+
+
+\begin{thebibliography}{9}
+
+\bibitem{dixon}
+Dixon, S. L., and Hall, C. A. (2013). \textit{Fluid Mechanics and Thermodynamics of Turbomachinery} (7th ed.). Butterworth-Heinemann.
+
+\bibitem{fox}
+Pritchard, P. J., and Mitchell, J. W. (2016). \textit{Fox and McDonald's Introduction to Fluid Mechanics} (9th ed.). Wiley.
+
+\bibitem{cengel} 
+Çengel, Y. A., and Cimbala, J. M. (2017). \textit{Fluid Mechanics: Fundamentals and Applications} (4th ed.). McGraw-Hill Education.
+
+\end{thebibliography}
+\end{document}

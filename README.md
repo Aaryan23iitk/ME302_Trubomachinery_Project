@@ -1,15 +1,9 @@
 # Scaling Analysis of a Turbomachine Component
 **IIT Kanpur | ME302: Fluid Mechanics II — Course Project**
 
-![Python](https://img.shields.io/badge/python-3.14-blue.svg)
-![LaTeX](https://img.shields.io/badge/latex-report-green.svg)
-![Status](https://img.shields.io/badge/status-completed-brightgreen.svg)
-
 ## 📌 Project Overview
 This repository contains the scaling analysis and computational verification for a turbomachine component test model. The project focuses on determining the maximum geometric scale ($s$) that satisfies both dynamic similarity (Mach and Reynolds numbers) and laboratory facility constraints.
 
-### 🧪 Facility & Simulation Diagram
-![Facility Schematic](Images/Fig1.png)
 
 ### Core Objectives:
 1.  **Dynamic Similarity:** Maintain $M = 0.5$ and $Re = 3.0 \times 10^6$.
@@ -30,9 +24,6 @@ The computational optimization identified the following optimal operating point:
 | **Compressor Temp Ratio ($\tau_c$)** | **1.068519008** |
 | **Reference Mass Flow ($\dot{m}_{ref}$)** | **10.55028375 kg/s** |
 
-### 📈 Compressor Map Analysis
-![Compressor Map](Images/compressor_map.png)
-*The red dot indicates the selected optimal operating point.*
 
 ---
 
